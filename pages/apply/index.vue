@@ -5,14 +5,17 @@
       <Meta name="description"/>
     </Head>
     <div style="width:50%;margin:auto;" :style="{
-        boxShadow: `var(--el-box-shadow-dark)`,
+        boxShadow: `var(--el-box-shadow-light)`,
       }">
         <ClientOnly >
-            <Vueform view="tabs" style="padding:20px" >
-              <TextElement name="username" label="昵称" placeholder="昵称"  :columns="{ container: 4, label: 3, wrapper: 12 }"/>
-              <PhoneElement name="phone" allow-incomplete unmask  default="+86" :include="['cn']" label="手机号" placeholder="+86"  :columns="{ container: 12, label: 1, wrapper: 3 }" />
-              <TextElement name="code" label="验证码" placeholder="xxxxxx"  :columns="{ container: 3, label: 4, wrapper: 12 }" /> 
-              <ButtonElement name="button"  :columns="{ container: 2, label: 3, wrapper: 12 }" button-label="发送验证码"/>
+            <Vueform endpoint="/api/test" method="POST" view="tabs" style="padding:30px" >
+              <StaticElement tag="h4" align="center" content="个人信息" name="static" />
+              <TextElement name="username" label="昵称" placeholder="昵称"  :columns="{ container: 4, label: 3, wrapper: 12 }"  rules="required|min:3"/>
+              <PhoneElement name="phone" allow-incomplete unmask  default="+86" :include="['cn']" label="手机号" placeholder="+86"  :columns="{ container: 12, label: 1, wrapper: 4 }"  rules="required"/>
+              <TextElement name="code" label="验证码" placeholder="xxxxxx"  :columns="{ container: 4, label: 3, wrapper: 12 }"  rules="required"/> 
+              <ButtonElement name="button"  :columns="{ container: 8, label: 3, wrapper: 12 }" button-label="发送验证码"/>
+              <StaticElement tag="h4" align="center" content="项目详情" name="static" />
+              <TextElement name="name" label="项目名称" placeholder="项目名称"  :columns="{ container: 4, label: 4, wrapper: 12 }" rules="required"/>
               <SelectElement
               name="select"
               default="辽宁一区"
@@ -24,7 +27,8 @@
                 '江西一区',
               ]"
               :columns="{ container: 4, label: 3, wrapper: 12 }"
-            />
+              rules="required"
+              />
             <RadiogroupElement
             default="2 Core"
             label="CPU核心数"
@@ -41,7 +45,7 @@
         />
 
         <SliderElement
-        name="hhd"
+        name="disk"
         label="磁盘容量"
         :default="5"
         :min="1"
@@ -63,8 +67,10 @@
         <ButtonElement name="submit" button-label="提交申请"  align="center" size="lg"  submits/>
             </Vueform>
           </ClientOnly>
+          
     </div>
 </template>
 <script setup lang="ts">
 import PhoneElemen  from '@vueform/vueform'
+const form = ref()
 </script>

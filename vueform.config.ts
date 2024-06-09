@@ -4,6 +4,7 @@ import en from '@vueform/vueform/locales/en'
 import zh_CN from '@vueform/vueform/locales/zh_CN'
 import vueform from '@vueform/vueform/dist/vueform'
 import { defineConfig } from '@vueform/vueform'
+import PluginMask from '@vueform/plugin-mask'
 import axios from 'axios'
 
 // You might place these anywhere else in your project
@@ -16,4 +17,7 @@ export default defineConfig({
   theme: vueform,
   locales: { zh_CN,en },
   locale: 'zh_CN',
+  plugins: [
+    PluginMask,
+  ]
 })
