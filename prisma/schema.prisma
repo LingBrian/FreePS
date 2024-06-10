@@ -18,6 +18,11 @@ model User {
     applications Application[]
 }
 
+model Adminer {
+    id           Int           @id @default(autoincrement())
+    adminId Int
+}
+
 model Application {
     id          Int     @id @default(autoincrement())
     name        String
@@ -29,4 +34,10 @@ model Application {
     deploy      Boolean @default(false)
     applicant   User    @relation(fields: [applicantId], references: [id])
     applicantId Int
+}
+model Register {
+    id          Int     @id @default(autoincrement())
+    phone       String       
+    deadline        DateTime 
+    code        String
 }
