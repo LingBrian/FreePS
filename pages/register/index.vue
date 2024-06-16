@@ -1,11 +1,11 @@
-<template>
+<template slot-scope>
   <!--注册页面-->
   <Head>
     <Title>注册页面</Title>
     <Meta name="description" />
   </Head>
   <div
-    style="width: 25%; margin: auto"
+    class="formbox"
     :style="{
       boxShadow: `var(--el-box-shadow-light)`,
     }"
@@ -18,7 +18,7 @@
         :model-value="form"
         @update:model-value="form = $event"
         validate-on="change"
-        style="padding: 30px"
+        style="padding: 5%"
       >
         <StaticElement tag="h4" align="center" content="注册" name="static" />
         <TextElement
@@ -29,7 +29,7 @@
           placeholder="昵称"
           :columns="{ container: 12, label: 3, wrapper: 8 }"
           rules="required|min:3|max:64"
-          @blur="Check()"
+          @input="Check()"
         />
         <PhoneElement
           ref="phone$"
@@ -43,9 +43,19 @@
           placeholder="+86"
           :columns="{ container: 12, label: 3, wrapper: 10 }"
           rules="required|min:14|max:14"
-          @blur="Check()"
+          @input="Check()"
           :disabled="phoneChecked"
         />
+        <StaticElement
+          name="static"
+          :columns="{ container: 12, label: 3, wrapper: 12 }"
+        >
+          <DefaultSilderVerify
+            @success="sliderHandleSuccess"
+            @failed="sliderHandleError"
+          />
+        </StaticElement>
+
         <TextElement
           name="code"
           label="验证码"
@@ -58,7 +68,7 @@
         />
         <ButtonElement
           name="button"
-          :columns="{ container: 4, label: 3, wrapper: 12 }"
+          :columns="{ container: 4, label: 4, wrapper: 12 }"
           @click="Send()"
           :button-label="codeBtnRef.text"
           :disabled="codeBtnRef.disabled || phoneChecked"
@@ -113,6 +123,14 @@ const username$ = ref(null);
 const phone$ = ref(null);
 const code$ = ref(null);
 const canSubmit = ref(false);
+let isBot = true;
+function sliderHandleSuccess() {
+  ElMessage({ message: "人机验证已通过", type: "success" });
+  isBot = false;
+}
+function sliderHandleError() {
+  ElMessage({ message: "人机验证未通过", type: "warning" });
+}
 function Check() {
   const query = {
     username: form.value.username,
@@ -145,7 +163,12 @@ function Check() {
   });
 }
 function Send() {
+  if (isBot) {
+    ElMessage({ message: "人机验证未通过", type: "warning" });
+    return;
+  }
   Check();
+
   if (!canSubmit.value) {
     $fetch("/api/test/sms", {
       method: "POST",
@@ -209,3 +232,14 @@ function CheckCode() {
   }
 }
 </script>
+<style>
+.formbox {
+  width: 25%;
+  margin: auto;
+}
+@media screen and (max-width: 1200px) {
+  .formbox {
+    width: 100%;
+  }
+}
+</style>
