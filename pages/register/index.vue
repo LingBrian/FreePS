@@ -12,7 +12,7 @@
   >
     <ClientOnly>
       <Vueform
-        endpoint="/api/test"
+        endpoint="/api/user/create"
         method="POST"
         view="tabs"
         :model-value="form"

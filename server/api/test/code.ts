@@ -10,6 +10,8 @@ export default defineEventHandler(async (event) => {
       deadline: "desc", // 'asc' 表示升序，'desc' 表示降序
     },
   })) || {
+    phone: "",
+    code: "",
     deadline: new Date(),
   };
   const deadlineDate = new Date(register.deadline);
