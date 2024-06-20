@@ -16,6 +16,7 @@ model User {
     username     String?
     password     String
     applications Application[]
+    loginlogs Loginlogs[]
 }
 
 model Adminer {
@@ -40,4 +41,12 @@ model Register {
     phone       String       
     deadline        DateTime 
     code        String
+}
+model Loginlogs {
+    id          Int     @id @default(autoincrement())
+    phone       String       
+    time        DateTime 
+    ip          String
+    loiner      User    @relation(fields: [userid], references: [id])
+    userid      Int
 }
