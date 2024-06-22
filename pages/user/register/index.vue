@@ -112,6 +112,9 @@
 </template>
 <script setup lang="ts">
 import PhoneElemen from "@vueform/vueform";
+definePageMeta({
+  middleware: ["unauth"],
+});
 const form = ref({});
 const phoneChecked = ref(false);
 const codeBtnRef = ref({ text: "发送验证码", color: "", disabled: false });
