@@ -83,11 +83,14 @@ export default defineEventHandler(async (event) => {
     const deadlineDate = new Date(register.deadline);
     const now = new Date();
     if (now <= deadlineDate) {
+      await db.$disconnect();
       return { code: 2, msg: "三分钟内请勿重发送" };
     } else {
+      await db.$disconnect();
       return send(body.phone);
     }
   } else {
+    await db.$disconnect();
     return send(body.phone);
   }
 });

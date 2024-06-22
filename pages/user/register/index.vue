@@ -17,6 +17,7 @@
         view="tabs"
         :model-value="form"
         @update:model-value="form = $event"
+        @success="RegSuccess"
         validate-on="change"
         style="padding: 5%"
       >
@@ -31,18 +32,14 @@
           rules="required|min:3|max:64"
           @input="Check()"
         />
-        <PhoneElement
+        <TextElement
           ref="phone$"
-          input-type="number"
           name="phone"
           allow-incomplete
-          unmask
-          default="+86"
-          :include="['cn']"
           label="手机号"
           placeholder="+86"
           :columns="{ container: 12, label: 3, wrapper: 10 }"
-          rules="required|min:14|max:14"
+          rules="required|min:11|max:11"
           @input="Check()"
           :disabled="phoneChecked"
         />
@@ -95,7 +92,6 @@
         >
           已阅读并同意<ElLink href="/" target="_blank">《用户协议》</ElLink>
         </CheckboxElement>
-        <CheckboxElement name="news"> 希望获取最新资讯 </CheckboxElement>
         <ButtonElement
           :disabled="canSubmit"
           name="submit"
@@ -134,30 +130,33 @@ function sliderHandleError() {
 function Check() {
   const query = {
     username: form.value.username,
-    phone: form.value.phone.replace("+86", ""),
+    phone: form.value.phone || "",
   };
-  if (!/^(?!1(4|7)\d{9})1[3-9]\d{9}$/.test(query.phone)) {
-    phone$.value.messageBag.clear("errors");
-    phone$.value.messageBag.append("手机号格式错误" + query.phone);
+  if (!/^(?!1(4|7)\d{9})1[3-9]\d{9}$/.test(query.phone) && query.phone != "") {
+    username$.value.messageBag.clear("errors");
+    username$.value.messageBag.append("手机号格式错误" + query.phone);
     canSubmit.value = true;
     return;
   } else {
-    phone$.value.messageBag = [];
+    username$.value.messageBag.clear("errors");
   }
-  $fetch("/api/test/reg", {
+  $fetch("/api/reg", {
     method: "POST",
     body: query,
   }).then((res) => {
     if (!res.phone) {
-      phone$.value.messageBag.append("手机号已经注册");
+      username$.value.messageBag.append("手机号已经注册");
       canSubmit.value = true;
+      return 0;
     } else {
+      username$.value.messageBag.clear("errors");
       canSubmit.value = false;
     }
     if (!res.username) {
       username$.value.messageBag.append("昵称已存在");
       canSubmit.value = true;
     } else {
+      username$.value.messageBag.clear("errors");
       canSubmit.value = false;
     }
   });
@@ -170,10 +169,10 @@ function Send() {
   Check();
 
   if (!canSubmit.value) {
-    $fetch("/api/test/sms", {
+    $fetch("/api/reg/sms", {
       method: "POST",
       body: {
-        phone: form.value.phone.replace("+86", ""),
+        phone: form.value.phone,
       },
     }).then((res) => {
       switch (res.code) {
@@ -199,7 +198,7 @@ function Send() {
 }
 function CheckCode() {
   if (!code$.value.invalid) {
-    $fetch("/api/test/code", {
+    $fetch("/api/reg/code", {
       method: "POST",
       body: {
         phone: form.value.phone.replace("+86", ""),
@@ -217,7 +216,7 @@ function CheckCode() {
           ElMessage({ message: res.msg, type: "success" });
           codeBtnRef.value.disabled = true;
           codeBtnRef.value.text = "已验证";
-          phoneChecked.value = ture;
+          phoneChecked.value = true;
           break;
         case 2:
           ElMessage({ message: res.msg, type: "warning" });
@@ -229,6 +228,14 @@ function CheckCode() {
           break;
       }
     });
+  }
+}
+function RegSuccess(response: { data: { code: number; msg: string } }, form$) {
+  if (response.data.code == 1) {
+    ElMessage({ message: response.data.msg, type: "success" });
+    navigateTo("/user/login");
+  } else {
+    ElMessage({ message: response.data.msg, type: "warning" });
   }
 }
 </script>

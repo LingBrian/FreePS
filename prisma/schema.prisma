@@ -3,6 +3,7 @@
 
 generator client {
     provider = "prisma-client-js"
+    binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -43,10 +44,10 @@ model Register {
     code        String
 }
 model Loginlogs {
-    id          Int     @id @default(autoincrement())
-    phone       String       
-    time        DateTime 
+    id          Int     @id @default(autoincrement())  
+    outtime     DateTime 
     ip          String
-    loiner      User    @relation(fields: [userid], references: [id])
+    loginer      User    @relation(fields: [userid], references: [id])
     userid      Int
+    token       String @unique
 }

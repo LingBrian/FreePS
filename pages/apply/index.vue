@@ -20,42 +20,6 @@
         <StaticElement
           tag="h4"
           align="center"
-          content="个人信息"
-          name="static"
-        />
-        <TextElement
-          name="username"
-          label="昵称"
-          placeholder="昵称"
-          :columns="{ container: 4, label: 3, wrapper: 12 }"
-          rules="required|min:3"
-        />
-        <PhoneElement
-          name="phone"
-          allow-incomplete
-          unmask
-          default="+86"
-          :include="['cn']"
-          label="手机号"
-          placeholder="+86"
-          :columns="{ container: 12, label: 1, wrapper: 4 }"
-          rules="required"
-        />
-        <TextElement
-          name="code"
-          label="验证码"
-          placeholder="xxxxxx"
-          :columns="{ container: 4, label: 4, wrapper: 12 }"
-          rules="required"
-        />
-        <ButtonElement
-          name="button"
-          :columns="{ container: 8, label: 3, wrapper: 12 }"
-          button-label="发送验证码"
-        />
-        <StaticElement
-          tag="h4"
-          align="center"
           content="项目详情"
           name="static"
         />
@@ -119,5 +83,8 @@
 </template>
 <script setup lang="ts">
 import PhoneElemen from "@vueform/vueform";
+definePageMeta({
+  middleware: ["auth"],
+});
 const form = ref();
 </script>

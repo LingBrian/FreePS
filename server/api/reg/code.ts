@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
     code: "",
     deadline: new Date(),
   };
+  await db.$disconnect();
   const deadlineDate = new Date(register.deadline);
   const now = new Date();
   if (now > deadlineDate) {

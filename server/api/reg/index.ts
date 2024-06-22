@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 const db = new PrismaClient();
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  return {
+  const res = {
     username:
       (await db.user.findFirst({
         where: {
@@ -16,4 +16,6 @@ export default defineEventHandler(async (event) => {
         },
       })) == null,
   };
+  await db.$disconnect();
+  return res;
 });

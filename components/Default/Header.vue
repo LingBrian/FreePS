@@ -24,11 +24,12 @@
             <el-menu-item index="/area/jx2/game">游戏服务器</el-menu-item>
         </el-sub-menu> -->
       </el-sub-menu>
-      <el-menu-item index="/forum" disabled>论坛</el-menu-item>
-      <el-menu-item index="/host" disabled>托管</el-menu-item>
+      <el-menu-item index="forum" disabled>论坛</el-menu-item>
+      <el-menu-item index="host" disabled>托管</el-menu-item>
       <div class="flex-grow" />
-      <el-menu-item index="/login">登录</el-menu-item>
-      <el-menu-item index="register">注册</el-menu-item>
+      <el-menu-item v-if="auth" index="/user/login">登录</el-menu-item>
+      <el-menu-item v-if="auth" index="/user/register">注册</el-menu-item>
+      <el-menu-item v-if="!auth" @click="logoutNow">注销</el-menu-item>
     </el-menu>
   </client-only>
 </template>
@@ -36,9 +37,13 @@
 <script lang="ts" setup>
 const activeIndex = ref("1");
 const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
   navigateTo(key);
 };
+const auth = ref(useCookie("auth").value == undefined);
+function logoutNow() {
+  logout();
+  auth.value = true;
+}
 </script>
 <style>
 .flex-grow {
