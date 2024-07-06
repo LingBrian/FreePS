@@ -4,7 +4,7 @@ const db = new PrismaClient();
 
 async function auth(auth: string) {
   const res = await db.loginlogs.findFirst({
-    where: { token: auth.toString() },
+    where: { token: auth },
   });
   //return JSON.stringify((await res).values)
   if (res == null) {
