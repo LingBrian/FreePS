@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id           Int           @id @default(autoincrement())
+    phone        String        @unique
+    username     String?
+    password     String
+    applications Application[]
+    loginlogs Loginlogs[]
+    Vm          Vm[]
+}
+
+model Adminer {
+    id           Int           @id @default(autoincrement())
+    adminId Int
+}
+
+model Application {
+    id          Int     @id @default(autoincrement())
+    name        String
+    area        String
+    cpu         Int
+    ram         Int
+    disk        Int
+    desc        String
+    deploy      Boolean @default(false)
+    applicant   User    @relation(fields: [applicantId], references: [id])
+    applicantId Int
+}
+model Register {
+    id          Int     @id @default(autoincrement())
+    phone       String       
+    deadline        DateTime 
+    code        String
+}
+model Loginlogs {
+    id          Int     @id @default(autoincrement())  
+    outtime     DateTime 
+    ip          String
+    loginer      User    @relation(fields: [userid], references: [id])
+    userid      Int
+    token       String @unique
+}
+//Config
+model Web  {
+    ConfigId    Int   @id
+    ConfigName  String
+    ConfigValue String
+}
+model Cluster {
+    ClusterId   Int   @id
+    Name        String
+    Ip          String
+    Username    String
+    Password    String
+    Gateway     String
+    Resource    String
+    Status      String
+    Nodes       Node[]
+}
+model Node {
+    NodeId      Int @id
+    Cluster     Cluster @relation(fields: [ClusterId], references: [ClusterId])
+    ClusterId   Int
+    Resource    String
+    Status      String
+    Vms         Vm[]
+}
+model Template {
+    TemplateId Int     @id @default(autoincrement())  
+    OS          String
+    Type        String
+    Path        String
+    Cpu         String
+    Ram         String
+    Disk        String
+    Ports       String
+    Vm          Vm[]
+}
+//datasource
+model Ip {
+    Adress  String @id
+    Vmid    Int
+    Vm      Vm  @relation(fields: [Vmid], references: [Vmid])
+}
+model Port {
+    Port  Int @id
+    Vmid    Int
+    Vm      Vm  @relation(fields: [Vmid], references: [Vmid])
+}
+model Vm {
+    Vmid    Int     @id @default(autoincrement())  
+    NodeId  Int
+    Node    Node    @relation(fields: [NodeId], references: [NodeId])
+    TemplateId  Int
+    Template    Template @relation(fields: [TemplateId], references: [TemplateId])
+    UserId  Int
+    User    User @relation(fields: [UserId], references: [id])
+    Ip    Ip[]    
+    SshPort Int
+    Ports   Port[]
+}

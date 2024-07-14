@@ -3,6 +3,7 @@
 
 generator client {
     provider = "prisma-client-js"
+    binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -16,6 +17,12 @@ model User {
     username     String?
     password     String
     applications Application[]
+    loginlogs Loginlogs[]
+}
+
+model Adminer {
+    id           Int           @id @default(autoincrement())
+    adminId Int
 }
 
 model Application {
@@ -29,4 +36,18 @@ model Application {
     deploy      Boolean @default(false)
     applicant   User    @relation(fields: [applicantId], references: [id])
     applicantId Int
+}
+model Register {
+    id          Int     @id @default(autoincrement())
+    phone       String       
+    deadline        DateTime 
+    code        String
+}
+model Loginlogs {
+    id          Int     @id @default(autoincrement())  
+    outtime     DateTime 
+    ip          String
+    loginer      User    @relation(fields: [userid], references: [id])
+    userid      Int
+    token       String @unique
 }
