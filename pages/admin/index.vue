@@ -4,52 +4,50 @@
     <Meta name="description" />
   </Head>
   <client-only>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="id" label="AppID" width="180" />
-      <el-table-column prop="applicant" label="申请人" width="180" />
-      <el-table-column prop="area" label="地区" width="180" />
-      <el-table-column label="配置" width="300">
-        <template #default="scope">
-          <el-icon color="blue"><ElIcon-Cpu /></el-icon>
-          {{ scope.row.cpu }} Core
-          <el-icon color="green"><ElIcon-Stopwatch /></el-icon
-          >{{ scope.row.ram }} GB
-          <el-icon color="gray"><ElIcon-Memo /></el-icon>
-          {{ scope.row.disk }} GB
-        </template>
-      </el-table-column>
-      <el-table-column prop="desc" label="用途" width="360" />
-      <el-table-column label="状态" width="300">
-        <template #default="scope">
-          <el-icon :color="scope.row.deploy ? 'green' : 'orange'"
-            ><ElIcon-Stamp
-          /></el-icon>
-          {{ scope.row.deploy ? "通过" : "待审核" }}
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button
-            size="small"
-            type="success"
-            @click="ElMessage({ message: '同意', type: 'success' })"
-          >
-            同意
-          </el-button>
-          <el-button
-            size="small"
-            type="danger"
-            @click="ElMessage({ message: '拒绝', type: 'warning' })"
-          >
-            拒绝
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-container>
+      <el-aside width="64px">
+        <el-menu default-active="2" class="el-menu-vertical-demo" collapse>
+          <el-sub-menu index="1">
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>Navigator One</span>
+            </template>
+            <el-menu-item-group>
+              <template #title><span>Group One</span></template>
+              <el-menu-item index="1-1">item one</el-menu-item>
+              <el-menu-item index="1-2">item two</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group title="Group Two">
+              <el-menu-item index="1-3">item three</el-menu-item>
+            </el-menu-item-group>
+            <el-sub-menu index="1-4">
+              <template #title><span>item four</span></template>
+              <el-menu-item index="1-4-1">item one</el-menu-item>
+            </el-sub-menu>
+          </el-sub-menu>
+          <el-menu-item index="2">
+            <el-icon><Stamp /></el-icon>
+            <template #title>申请审批</template>
+          </el-menu-item>
+          <el-menu-item index="3" @click="navigateTo('/admin/loginlogs')">
+            <el-icon><TakeawayBox /></el-icon>
+            <template #title>日志</template>
+          </el-menu-item>
+          <el-menu-item index="4">
+            <el-icon><setting /></el-icon>
+            <template #title>Navigator Four</template>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <div class="area">
+          <AdminApplicationDataTable />
+        </div>
+      </el-main>
+    </el-container>
   </client-only>
 </template>
 <script lang="ts" setup>
-import type { Application } from "~/types/Application";
-const data: Application[] = await $fetch("/api/admin/applications");
-const tableData = ref(data);
+import { Location, Setting, Stamp, TakeawayBox } from "@element-plus/icons-vue";
 </script>
+<style></style>

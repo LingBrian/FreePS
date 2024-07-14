@@ -29,6 +29,7 @@
       <div class="flex-grow" />
       <el-menu-item v-if="auth" index="/user/login">登录</el-menu-item>
       <el-menu-item v-if="auth" index="/user/register">注册</el-menu-item>
+      <el-menu-item v-if="!auth" index="/admin">管理界面</el-menu-item>
       <el-menu-item v-if="!auth" @click="logoutNow">注销</el-menu-item>
     </el-menu>
   </client-only>
